@@ -40,6 +40,8 @@ dependencies:
   sqflite: ^2.3.3+1
   path_provider: ^2.1.3
   connectivity_plus: ^5.0.2
+  shared_preferences: ^2.2.2
+
 
 
 dev_dependencies:
@@ -70,6 +72,10 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/json/
+    - assets/image/internet/
+    - assets/image/background/
+    - assets/image/logo/
+    - assets/fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -93,6 +99,66 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  #
+  fonts:
+    - family: s1
+      fonts:
+        - asset: assets/fonts/1.ttf
+          style: normal
+    - family: s2
+      fonts:
+        - asset: assets/fonts/2.ttf
+          style: normal
+    - family: s3
+      fonts:
+        - asset: assets/fonts/3.ttf
+          style: normal
+    - family: s4
+      fonts:
+        - asset: assets/fonts/4.ttf
+          style: normal
+    - family: s5
+      fonts:
+        - asset: assets/fonts/5.ttf
+          style: normal
+    - family: s6
+      fonts:
+        - asset: assets/fonts/6.ttf
+          style: normal
+    - family: s7
+      fonts:
+        - asset: assets/fonts/7.ttf
+          style: normal
+    - family: s8
+      fonts:
+        - asset: assets/fonts/8.ttf
+          style: normal
+    - family: s9
+      fonts:
+        - asset: assets/fonts/9.ttf
+          style: normal
+    - family: s10
+      fonts:
+        - asset: assets/fonts/10.ttf
+          style: normal
+    - family: s11
+      fonts:
+        - asset: assets/fonts/11.otf
+          style: normal
+    - family: s12
+      fonts:
+        - asset: assets/fonts/12.otf
+          style: normal
+    - family: s13
+      fonts:
+        - asset: assets/fonts/13.otf
+          style: normal
+    - family: s14
+      fonts:
+        - asset: assets/fonts/14.otf
+          style: normal
+    - family: s0
+      fonts:
+        - asset: assets/fonts/15.otf
+          style: normal
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
