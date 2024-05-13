@@ -11,11 +11,10 @@ class NetworkController extends GetxController{
     if(firstTime==ConnectivityResult.none)
     {
       isConnected.value=false;
-      Get.find<HomeController>().colorList.shuffle();
-
     }
     else {
       isConnected.value = true;
+      Get.find<HomeController>().isFromAPI.value=true;
       Get.find<HomeController>().tagsAPIList.value=(await APIHelper.apiHelper.getTags())!;
     }
   }
@@ -25,15 +24,19 @@ class NetworkController extends GetxController{
       if(result==ConnectivityResult.none)
       {
         isConnected.value=false;
-        Get.find<HomeController>().colorList.shuffle();
+        Get.find<HomeController>().isFromAPI.value=false;
+        Get.find<HomeController>().indexJson.value=-1;
+        Get.find<HomeController>().tagOfAPI.value="";
       }
       else{
         isConnected.value=true;
-        Get.find<HomeController>().colorList.shuffle();
         if(Get.find<HomeController>().tagsAPIList.isEmpty)
           {
             Get.find<HomeController>().tagsAPIList.value=(await APIHelper.apiHelper.getTags())!;
           }
+        Get.find<HomeController>().isFromAPI.value=true;
+        Get.find<HomeController>().indexJson.value=-1;
+        Get.find<HomeController>().tagOfAPI.value="";
       }
     });
 

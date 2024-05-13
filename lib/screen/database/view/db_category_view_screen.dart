@@ -21,87 +21,69 @@ class _DBCategoryViewScreenState extends State<DBCategoryViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Obx(
-          () => Image.asset(
-            themeController.bgImage.value,
+    return Obx(() => networkController.isConnected.value
+        ? SizedBox(
             height: MediaQuery.sizeOf(context).height,
             width: MediaQuery.sizeOf(context).width,
-            fit: BoxFit.cover,
-            filterQuality: FilterQuality.high,
-          ),
-        ),
-        Obx(() => networkController.isConnected.value
-            ? SizedBox(
-                height: MediaQuery.sizeOf(context).height,
-                width: MediaQuery.sizeOf(context).width,
-                child: Obx(
-                  () => ListView.builder(
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ColoredBox(
-                          color: homeController.colorList[index].shade400,
-                          child: ListTile(
-                            onTap: () {
-                              if(dbController.dbCategoryModelList[index].index==1000)
-                                {
-                                  homeController.quotesAPIModelList.value=[];
-                                  homeController.getAPIQuotesList(dbController.dbCategoryModelList[index].category!);
-                                  homeController.colorList.shuffle();
-                                  Get.toNamed("quotes",arguments:true);
-                                }
-                              else{
-                                homeController.indexJson.value=dbController.dbCategoryModelList[index].index!;
-                                homeController.colorList.shuffle();
-                                Get.toNamed("quotes",arguments:false);
-                              }
+            child: Obx(
+              () => ListView.builder(
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      onTap: () {
+                        if(dbController.dbCategoryModelList[index].index==1000)
+                          {
+                            homeController.quotesAPIModelList.value=[];
+                            homeController.getAPIQuotesList(dbController.dbCategoryModelList[index].category!);
+                            Get.toNamed("quotes",arguments:true);
+                          }
+                        else{
+                          homeController.indexJson.value=dbController.dbCategoryModelList[index].index!;
+                          Get.toNamed("quotes",arguments:false);
+                        }
+                      },
+                      title: Text(dbController
+                          .dbCategoryModelList[index].category!,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black),),
+                      subtitle: const Text("Tap me to view  My Quotes:",style: TextStyle(color: Colors.black),),
+                      trailing: IconButton(
+                          onPressed: () {
+                            showDialog(context: context, builder: (context) {
+                              return AlertDialog(
+                                title: Text("Are you sure?"),
+                                actions: [
+                                  ElevatedButton(onPressed: () {
+                                    Navigator.pop(context);
+                                  }, child: Text("No!")),
+                                  ElevatedButton(onPressed: () {
+                                    DBHelper.dbHelper.deleteCategory(
+                                        id: dbController
+                                            .dbCategoryModelList[index].id!);
+                                    dbController.readCategory();
+                                    Navigator.pop(context);
+                                  }, child: Text("Yes!"))
+                                ],
+                              );
+                            },);
                             },
-                            title: Text(dbController
-                                .dbCategoryModelList[index].category!,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black),),
-                            subtitle: const Text("Tap me to view  My Quotes:",style: TextStyle(color: Colors.black),),
-                            trailing: IconButton(
-                                onPressed: () {
-                                  showDialog(context: context, builder: (context) {
-                                    return AlertDialog(
-                                      title: Text("Are you sure?"),
-                                      actions: [
-                                        ElevatedButton(onPressed: () {
-                                          Navigator.pop(context);
-                                        }, child: Text("No!")),
-                                        ElevatedButton(onPressed: () {
-                                          DBHelper.dbHelper.deleteCategory(
-                                              id: dbController
-                                                  .dbCategoryModelList[index].id!);
-                                          dbController.readCategory();
-                                          Navigator.pop(context);
-                                        }, child: Text("Yes!"))
-                                      ],
-                                    );
-                                  },);
-                                  },
-                                icon: Icon(Icons.delete,color: Colors.black,)),
-                          ),
-                        ),
-                      );
-                    },
-                    itemCount: dbController.dbCategoryModelList.length,
-                  ),
-                ),
-              )
-            : SizedBox(
-                height: MediaQuery.sizeOf(context).height,
-                width: MediaQuery.sizeOf(context).width,
-                child: Center(
-                  child: Image.asset(
-                    "assets/image/internet/no_internet.png",
-                    height: 216,
-                    width: 384,
-                    fit: BoxFit.cover,
-                  ),
-                )))
-      ],
-    );
+                          icon: Icon(Icons.delete,color: Colors.black,)),
+                    ),
+                  );
+                },
+                itemCount: dbController.dbCategoryModelList.length,
+              ),
+            ),
+          )
+        : SizedBox(
+            height: MediaQuery.sizeOf(context).height,
+            width: MediaQuery.sizeOf(context).width,
+            child: Center(
+              child: Image.asset(
+                "assets/image/internet/no_internet.png",
+                height: 216,
+                width: 384,
+                fit: BoxFit.cover,
+              ),
+            )));
   }
 }
