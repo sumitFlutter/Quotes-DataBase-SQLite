@@ -242,7 +242,7 @@ class _DBCategoryViewScreenState extends State<DBCategoryViewScreen> {
                         return InkWell(
                           onTap: () {
                             quotesController.fIndexJson.value =
-                                homeController.indexJson.value;
+                                dbController.indexJsonData.value;
                             quotesController.lIndexJson.value = index;
                             quotesController.random(1, 21);
                             Get.toNamed("details", arguments: false);
