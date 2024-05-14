@@ -1,5 +1,4 @@
-![Screenshot_20240514-183552]()
-![Screenshot_20240514-183607]()
+
 # quotes_app_db
 
 A new Flutter project.
