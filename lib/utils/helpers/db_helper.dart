@@ -58,5 +58,26 @@ class DBHelper{
     Database dbd=(await checkDB())!;
     dbd.delete("cate",whereArgs: [id],where: "id==?");
   }
-
+  Future<bool> readSQ(String quote)
+  async {
+    Database dbd=(await checkDB())!;
+    List l1=await dbd.rawQuery('SELECT * FROM quotes WHERE quote == ("$quote")');
+    if(l1.isNotEmpty) {
+      return false;
+    }
+        else{
+      return true;
+    }
+  }
+  Future<bool> readCC(String categoryS)
+  async {
+    Database dbd=(await checkDB())!;
+    List l1=await dbd.rawQuery("SELECT * FROM cate WHERE category == ('$categoryS')");
+  if(l1.isNotEmpty) {
+  return false;
+  }
+    else{
+  return true;
+  }
+  }
 }

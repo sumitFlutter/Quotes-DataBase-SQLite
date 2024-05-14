@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   NetworkController networkController = Get.put(NetworkController());
   DBController dbController = Get.put(DBController());
   QuotesController quotesController = Get.put(QuotesController());
-  FontFamilyController familyController=Get.put(FontFamilyController());
+  FontFamilyController familyController = Get.put(FontFamilyController());
 
   @override
   void initState() {
@@ -51,10 +51,11 @@ class _HomeScreenState extends State<HomeScreen> {
             PopupMenuButton(
                 itemBuilder: (context) => [
                       PopupMenuItem(
-                        child: Text("Liked Content"),
+                        child: const Text("Liked Content"),
                         onTap: () {
                           dbController.readQuotes();
                           dbController.readCategory();
+                          dbController.dbCateModel.value=DBCategoryModel();
                           Get.toNamed("dataBase");
                         },
                       )
@@ -65,72 +66,108 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Obx(() => networkController.isConnected.value
-                  ? Obx(
-                    () =>  SizedBox(
-                        height: MediaQuery.sizeOf(context).height * 0.08,
-                        child: homeController.tagsAPIList.isNotEmpty
-                            ? homeController.tagsAPIList[0] !=
-                                    APITagsModel(name: "sumit", count: 0)
-                                ? ListView.builder(
+              Obx(
+                () => networkController.isConnected.value
+                    ? Obx(
+                        () => SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.08,
+                          child: homeController.tagsAPIList.isNotEmpty
+                              ? homeController.tagsAPIList[0] !=
+                                      APITagsModel(name: "sumit", count: 0)
+                                  ? ListView.builder(
                                       scrollDirection: Axis.horizontal,
                                       itemBuilder: (context, index) {
                                         return InkWell(
-                                            onTap: () {
-                                              homeController.getAPIQuotesList(
+                                          onTap: () {
+                                            homeController.getAPIQuotesList(
+                                                homeController
+                                                    .tagsAPIList[index].name!);
+                                            homeController.isFromAPI.value =
+                                                true;
+                                          },
+                                          child: Obx(
+                                            () => Container(
+                                              width: 120,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: themeController
+                                                        .pTheme.value
+                                                    ? homeController.tagOfAPI
+                                                                .value ==
+                                                            homeController
+                                                                .tagsAPIList[
+                                                                    index]
+                                                                .name!
+                                                        ? Colors.black54
+                                                        : Colors.grey.shade100
+                                                    : homeController.tagOfAPI
+                                                                .value ==
+                                                            homeController
+                                                                .tagsAPIList[
+                                                                    index]
+                                                                .name!
+                                                        ? Colors.green.shade300
+                                                        : Colors.black,
+                                              ),
+                                              margin: const EdgeInsets.all(12),
+                                              child: Center(
+                                                child: Text(
                                                   homeController
-                                                      .tagsAPIList[index].name!);
-                                              homeController.isFromAPI.value=true;
-                                            },
-                                            child: Obx(
-                                              () => Container(
-                                                width: 120,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(20),
-                                                  color: themeController.pTheme.value
-                                                      ? homeController.tagOfAPI.value==homeController
-                                                      .tagsAPIList[index].name!?Colors.black54:Colors.grey.shade100
-                                                      : homeController.tagOfAPI.value==homeController
-                                                      .tagsAPIList[index].name!?Colors.green.shade300:Colors.black,
-                                                ),
-                                                margin: EdgeInsets.all(12),
-                                                child: Center(
-                                                  child: Text(
-                                                    homeController
-                                                        .tagsAPIList[index].name!,
-                                                    style: TextStyle(color: themeController.pTheme.value
-                                                        ? homeController.tagOfAPI.value==homeController
-                                                        .tagsAPIList[index].name!?Colors.white:Colors.black
-                                                        : homeController.tagOfAPI.value==homeController
-                                                        .tagsAPIList[index].name!?Colors.black:Colors.white,),
+                                                      .tagsAPIList[index].name!,
+                                                  style: TextStyle(
+                                                    color: themeController
+                                                            .pTheme.value
+                                                        ? homeController
+                                                                    .tagOfAPI
+                                                                    .value ==
+                                                                homeController
+                                                                    .tagsAPIList[
+                                                                        index]
+                                                                    .name!
+                                                            ? Colors.white
+                                                            : Colors.black
+                                                        : homeController
+                                                                    .tagOfAPI
+                                                                    .value ==
+                                                                homeController
+                                                                    .tagsAPIList[
+                                                                        index]
+                                                                    .name!
+                                                            ? Colors.black
+                                                            : Colors.white,
                                                   ),
                                                 ),
                                               ),
                                             ),
+                                          ),
                                         );
                                       },
-                                      itemCount: homeController.tagsAPIList.length,
-                                )
-                                : Center(
-                                    child: Text("Check Your Net work Connection"),
-                                  )
-                            : Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                      ),
-                  )
-                  : Obx(
-                    () => SizedBox(
-                        height: MediaQuery.sizeOf(context).height * 0.08,
-                        child: ListView.builder(
+                                      itemCount:
+                                          homeController.tagsAPIList.length,
+                                    )
+                                  : const Center(
+                                      child: Text(
+                                          "Check Your Net work Connection"),
+                                    )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                        ),
+                      )
+                    : Obx(() => SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.08,
+                          child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return InkWell(
                                 onTap: () {
-                                  homeController.indexJson.value=index;
-                                  quotesController.randomFontFamilyGetter(0, 15);
-                                  familyController.fontManager.value=quotesController.randomFont;
-                                  homeController.isFromAPI.value=false;
+                                  homeController.indexJson.value = index;
+                                  quotesController.randomFontFamilyGetter(
+                                      0, 15);
+                                  familyController.fontManager.value =
+                                      quotesController.randomFont;
+                                  homeController.isFromAPI.value = false;
                                 },
                                 child: Obx(
                                   () => Container(
@@ -138,16 +175,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
                                       color: themeController.pTheme.value
-                                          ? homeController.indexJson.value==index?Colors.black54:Colors.grey.shade100
-                                          : homeController.indexJson.value==index?Colors.green.shade300:Colors.black,
+                                          ? homeController.indexJson.value ==
+                                                  index
+                                              ? Colors.black54
+                                              : Colors.grey.shade100
+                                          : homeController.indexJson.value ==
+                                                  index
+                                              ? Colors.green.shade300
+                                              : Colors.black,
                                     ),
-                                    margin: EdgeInsets.all(12),
+                                    margin: const EdgeInsets.all(12),
                                     child: Center(
                                       child: Text(
-                                        homeController.jsonModelList[index].category!,
-                                        style: TextStyle(color: themeController.pTheme.value
-                                            ? homeController.indexJson.value==index?Colors.white:Colors.black
-                                            : homeController.indexJson.value==index?Colors.black:Colors.white,),
+                                        homeController
+                                            .jsonModelList[index].category!,
+                                        style: TextStyle(
+                                          color: themeController.pTheme.value
+                                              ? homeController
+                                                          .indexJson.value ==
+                                                      index
+                                                  ? Colors.white
+                                                  : Colors.black
+                                              : homeController
+                                                          .indexJson.value ==
+                                                      index
+                                                  ? Colors.black
+                                                  : Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -157,127 +211,329 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemCount: homeController.jsonModelList.length,
                           ),
                         )),
-                  ),
-              SizedBox(height: 10,),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
               Padding(
-                padding: EdgeInsets.all(4),
+                padding: const EdgeInsets.all(4),
                 child: Obx(
-                  () => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  () => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                    homeController.indexJson.value==-1&&homeController.tagOfAPI.value==""?
-                        Text("Select Category"):
-                        homeController.isFromAPI.value?Text(homeController.tagOfAPI.value):
-                            Text(homeController.jsonModelList[homeController.indexJson.value].category!),
-                      IconButton(onPressed: () {
-                        if(homeController.indexJson.value!=-1&&homeController.tagOfAPI.value!="")
-                          {
-                            if(homeController.isFromAPI.value)
-                              {
-                                DBCategoryModel c1=DBCategoryModel(category: homeController.tagOfAPI.value,index: 1000);
-                                DBHelper.dbHelper.insertCategory(c1);
-                                dbController.readCategory();
-                              }
-                            else{
-                              DBCategoryModel c1=DBCategoryModel(category: homeController.jsonModelList[homeController.indexJson.value].category!,index: homeController.indexJson.value);
-                              DBHelper.dbHelper.insertCategory(c1);
-                              dbController.readCategory();
-                            }
-                          }
-                      }, icon: Icon(Icons.thumb_up,))
-                  ],),
+                      homeController.indexJson.value == -1 &&
+                              homeController.tagOfAPI.value == ""
+                          ? const Text("Select Category")
+                          : homeController.isFromAPI.value
+                              ? Text(homeController.tagOfAPI.value)
+                              : Text(homeController
+                                  .jsonModelList[homeController.indexJson.value]
+                                  .category!),homeController.indexJson.value != -1 ||
+                          homeController.tagOfAPI.value != ""?
+                      IconButton.filledTonal(
+                            onPressed: () async {
+                                if (homeController.isFromAPI.value) {
+                                  if (await DBHelper.dbHelper
+                                      .readCC(homeController.tagOfAPI.value)) {
+                                    DBCategoryModel c1 = DBCategoryModel(
+                                        category: homeController.tagOfAPI.value,
+                                        index: 1000);
+                                    DBHelper.dbHelper.insertCategory(c1);
+                                    dbController.readCategory();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text("SucessFully Added")));
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text("Already Added")));
+                                  }
+                                } else {
+                                  if (await DBHelper.dbHelper.readCC(
+                                      homeController
+                                          .jsonModelList[
+                                              homeController.indexJson.value]
+                                          .category!)) {
+                                    DBCategoryModel c1 = DBCategoryModel(
+                                        category: homeController
+                                            .jsonModelList[
+                                                homeController.indexJson.value]
+                                            .category!,
+                                        index: homeController.indexJson.value);
+                                    DBHelper.dbHelper.insertCategory(c1);
+                                    dbController.readCategory();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text("SucessFully Added")));
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text("Already Added")));
+                                  }
+                                }
+                            },
+                            icon: const Icon(
+                              Icons.thumb_up,
+                            )):Container()
+                    ],
+                  ),
                 ),
               ),
-              Obx(() =>homeController.indexJson.value==-1&&homeController.tagOfAPI.value==""?
-              SizedBox(height: MediaQuery.sizeOf(context).height*0.5,
-              child: Center(child: Text("Please Select Any Category To view Quotes"),),):
-              homeController.isFromAPI.value?
-                  homeController.quotesAPIModelList.isNotEmpty?
-                      homeController.quotesAPIModelList[0]!=QuotesAPIModel(author: "Sumit",tags: ["break UP"],content: "Charmi")?
-              Expanded(
-                child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,mainAxisSpacing: 25,crossAxisSpacing: 25), padding:EdgeInsets.all(10), itemBuilder: (context, index) {
-                  int style=0;
-                  if(index>=15)
-                  {
-                    style=index%14;
-                  }
-                  else{
-                    style=index;
-                  }
-                  return InkWell(
-                    onTap: () {
-                      quotesController.indexAPI.value=index;
-                      quotesController.random(1, 21);
-                      quotesController.randomFontFamilyGetter(0, 15);
-                      familyController.fontManager.value=quotesController.randomFont;
-                      Get.toNamed("details",arguments: true);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.grey.withOpacity(0.2)),
-                      padding: EdgeInsets.all(4),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Align(alignment: Alignment.centerRight,child: IconButton(icon: Icon(Icons.favorite_border),onPressed: () {
-                            DBQuotesModel db=DBQuotesModel(author: homeController.quotesAPIModelList[index].author!,quote: homeController.quotesAPIModelList[index].content!,category: homeController.tagOfAPI.value);
-                            DBHelper.dbHelper.insertQuotes(db);
-                            dbController.readQuotes();
-                          },),),
-                          SizedBox(height: 10,),
-                          Text(homeController.quotesAPIModelList[index].content!,style: TextStyle(fontSize: 10,fontFamily: "s$style"),),
-                          SizedBox(height: 1,),
-                          Text(homeController.quotesAPIModelList[index].author!,style: TextStyle(fontWeight: FontWeight.bold),),
-                        ],
+              Obx(() => homeController.indexJson.value == -1 &&
+                      homeController.tagOfAPI.value == ""
+                  ? SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.5,
+                      child: const Center(
+                        child:
+                            Text("Please Select Any Category To view Quotes"),
                       ),
-                    ),
-                  );
-                },
-                itemCount: homeController.quotesAPIModelList.length,),
-              ): const Center(
-                        child: Text("Check Your Net work Connection"),
-                      )
-                      : const Center(
-                    child: CircularProgressIndicator(),
-                  ):
-              Expanded(
-                child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,mainAxisSpacing:25,crossAxisSpacing: 25), padding:EdgeInsets.all(10),itemBuilder: (context, index) {
-                  int style=0;
-                  if(index>=15)
-                    {
-                      style=index%14;
-                    }
-                  else{
-                    style=index;
-                  }
-                  return InkWell(
-                    onTap: () {
-                      quotesController.fIndexJson.value=homeController.indexJson.value;
-                      quotesController.lIndexJson.value=index;
-                      quotesController.random(1, 21);
-                      Get.toNamed("details",arguments: false);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.grey.withOpacity(0.2)),
-                      padding: EdgeInsets.all(4),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Align(alignment: Alignment.centerRight,child: IconButton(icon: Icon(Icons.favorite_border),onPressed: () {
-                            DBQuotesModel db=DBQuotesModel(author: homeController.jsonModelList[homeController.indexJson.value].quotesList![index].author!,quote: homeController.jsonModelList[homeController.indexJson.value].quotesList![index].quote!,category: homeController.jsonModelList[homeController.indexJson.value].category!);
-                            DBHelper.dbHelper.insertQuotes(db);
-                            dbController.readQuotes();
-                          },),),
-                          SizedBox(height: 10,),
-                          Text(homeController.jsonModelList[homeController.indexJson.value].quotesList![index].quote!,style: TextStyle(fontSize: 10,fontFamily: "s$style"),),
-                          SizedBox(height: 1,),
-                          Text(homeController.jsonModelList[homeController.indexJson.value].quotesList![index].author!)
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                  itemCount: homeController.jsonModelList[homeController.indexJson.value].quotesList!.length,),
-              )
-              ),
+                    )
+                  : homeController.isFromAPI.value
+                      ? homeController.quotesAPIModelList.isNotEmpty
+                          ? homeController.quotesAPIModelList[0] !=
+                                  QuotesAPIModel(
+                                      author: "Sumit",
+                                      tags: ["break UP"],
+                                      content: "Charmi")
+                              ? Expanded(
+                                  child: GridView.builder(
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2,
+                                            mainAxisSpacing: 25,
+                                            crossAxisSpacing: 25,
+                                            mainAxisExtent: 150),
+                                    padding: const EdgeInsets.all(10),
+                                    itemBuilder: (context, index) {
+                                      int style = 0;
+                                      if (index >= 15) {
+                                        style = index % 14;
+                                      } else {
+                                        style = index;
+                                      }
+                                      return InkWell(
+                                        onTap: () {
+                                          quotesController.indexAPI.value =
+                                              index;
+                                          quotesController.random(1, 21);
+                                          quotesController
+                                              .randomFontFamilyGetter(0, 15);
+                                          familyController.fontManager.value =
+                                              quotesController.randomFont;
+                                          Get.toNamed("details",
+                                              arguments: true);
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color:
+                                                  Colors.grey.withOpacity(0.2)),
+                                          padding: const EdgeInsets.all(4),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: IconButton(
+                                                  icon: const Icon(
+                                                      Icons.favorite_border),
+                                                  onPressed: () async {
+                                                    if (await DBHelper.dbHelper
+                                                            .readSQ(homeController
+                                                                .quotesAPIModelList[
+                                                                    index]
+                                                                .content!) ==
+                                                        true) {
+                                                      DBQuotesModel db = DBQuotesModel(
+                                                          author: homeController
+                                                              .quotesAPIModelList[
+                                                                  index]
+                                                              .author!,
+                                                          quote: homeController
+                                                              .quotesAPIModelList[
+                                                                  index]
+                                                              .content!,
+                                                          category:
+                                                              homeController
+                                                                  .tagOfAPI
+                                                                  .value);
+                                                      DBHelper.dbHelper
+                                                          .insertQuotes(db);
+                                                      dbController.readQuotes();
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              const SnackBar(
+                                                                  content: Text(
+                                                                      "SucessFully Added")));
+                                                    } else {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                              const SnackBar(
+                                                                  content: Text(
+                                                                      "Already Added")));
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                homeController
+                                                    .quotesAPIModelList[index]
+                                                    .content!,
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    fontFamily: "s$style",
+                                                    overflow:
+                                                        TextOverflow.ellipsis),
+                                              ),
+                                              const SizedBox(
+                                                height: 1,
+                                              ),
+                                              Text(
+                                                homeController
+                                                    .quotesAPIModelList[index]
+                                                    .author!,
+                                                style: TextStyle(
+                                                    fontFamily: "s$style"),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    itemCount: homeController
+                                        .quotesAPIModelList.length,
+                                  ),
+                                )
+                              : const Center(
+                                  child: Text("Check Your Net work Connection"),
+                                )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                      : Expanded(
+                          child: GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 25,
+                                    crossAxisSpacing: 25,
+                                    mainAxisExtent: 150),
+                            padding: const EdgeInsets.all(10),
+                            itemBuilder: (context, index) {
+                              int style = 0;
+                              if (index >= 15) {
+                                style = index % 14;
+                              } else {
+                                style = index;
+                              }
+                              return InkWell(
+                                onTap: () {
+                                  quotesController.fIndexJson.value =
+                                      homeController.indexJson.value;
+                                  quotesController.lIndexJson.value = index;
+                                  quotesController.random(1, 21);
+                                  Get.toNamed("details", arguments: false);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Colors.grey.withOpacity(0.2)),
+                                  padding: const EdgeInsets.all(4),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: IconButton(
+                                          icon:
+                                              const Icon(Icons.favorite_border),
+                                          onPressed: () async {
+                                            if (await DBHelper.dbHelper.readSQ(
+                                                    homeController
+                                                        .jsonModelList[
+                                                            homeController
+                                                                .indexJson
+                                                                .value]
+                                                        .quotesList![index]
+                                                        .quote!) ==
+                                                true) {
+                                              DBQuotesModel db = DBQuotesModel(
+                                                  author: homeController
+                                                      .jsonModelList[
+                                                          homeController
+                                                              .indexJson.value]
+                                                      .quotesList![index]
+                                                      .author!,
+                                                  quote: homeController
+                                                      .jsonModelList[
+                                                          homeController
+                                                              .indexJson.value]
+                                                      .quotesList![index]
+                                                      .quote!,
+                                                  category: homeController
+                                                      .jsonModelList[
+                                                          homeController
+                                                              .indexJson.value]
+                                                      .category!);
+                                              DBHelper.dbHelper
+                                                  .insertQuotes(db);
+                                              dbController.readQuotes();
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                      content: Text(
+                                                          "SucessFully Added")));
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                      content: Text(
+                                                          "Already Added")));
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        homeController
+                                            .jsonModelList[
+                                                homeController.indexJson.value]
+                                            .quotesList![index]
+                                            .quote!,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontFamily: "s$style",
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                      const SizedBox(
+                                        height: 1,
+                                      ),
+                                      Text(
+                                        homeController
+                                            .jsonModelList[
+                                                homeController.indexJson.value]
+                                            .quotesList![index]
+                                            .author!,
+                                        style: TextStyle(fontFamily: "s$style"),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            itemCount: homeController
+                                .jsonModelList[homeController.indexJson.value]
+                                .quotesList!
+                                .length,
+                          ),
+                        )),
             ],
           ),
         ),
