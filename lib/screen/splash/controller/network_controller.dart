@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
+import 'package:quotes_app_db/screen/database/controller/db_controller.dart';
 import 'package:quotes_app_db/screen/home/controller/home_controller.dart';
 import 'package:quotes_app_db/utils/helpers/api_helper.dart';
 
@@ -15,6 +16,7 @@ class NetworkController extends GetxController{
     else {
       isConnected.value = true;
       Get.find<HomeController>().isFromAPI.value=true;
+      Get.find<DBController>().isFromAPIData.value=true;
       Get.find<HomeController>().tagsAPIList.value=(await APIHelper.apiHelper.getTags())!;
     }
   }
@@ -25,6 +27,9 @@ class NetworkController extends GetxController{
       {
         isConnected.value=false;
         Get.find<HomeController>().isFromAPI.value=false;
+        Get.find<DBController>().isFromAPIData.value=false;
+        Get.find<DBController>().quotesAPIDataList.value=[];
+        Get.find<DBController>().indexJsonData.value=-1;
         Get.find<HomeController>().indexJson.value=-1;
         Get.find<HomeController>().tagOfAPI.value="";
       }
@@ -35,6 +40,9 @@ class NetworkController extends GetxController{
             Get.find<HomeController>().tagsAPIList.value=(await APIHelper.apiHelper.getTags())!;
           }
         Get.find<HomeController>().isFromAPI.value=true;
+        Get.find<DBController>().isFromAPIData.value=true;
+        Get.find<DBController>().quotesAPIDataList.value=[];
+        Get.find<DBController>().indexJsonData.value=-1;
         Get.find<HomeController>().indexJson.value=-1;
         Get.find<HomeController>().tagOfAPI.value="";
       }

@@ -16,7 +16,7 @@ class _DBDashScreenState extends State<DBDashScreen> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("DataBase"),
+          title: const Text("Liked Content"),
           bottom: const TabBar(indicatorColor: Colors.blue,
               unselectedLabelStyle: TextStyle(color: Colors.grey),
               labelStyle: TextStyle(color: Colors.blue),

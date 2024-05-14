@@ -22,36 +22,26 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Image.asset(
-            themeController.bgImage.value,
-            height: MediaQuery.sizeOf(context).height,
-            width: MediaQuery.sizeOf(context).width,
-            fit: BoxFit.cover,
-          ),
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(
-                  "assets/image/logo/logo.png",
-                  height: 96,
-                  width: 102,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  "Quotes App",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )
-              ],
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              "assets/image/logo/logo.png",
+              height: 96,
+              width: 102,
+              fit: BoxFit.cover,
             ),
-          )
-        ],
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              "Quotes App",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
       ),
     );
   }

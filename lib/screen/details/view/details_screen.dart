@@ -34,25 +34,33 @@ class _DetailsScreenState extends State<DetailsScreen> {
       child: Scaffold(
         appBar: AppBar(title: Obx(() => isFromAPI?Text(homeController.tagOfAPI.value,style: const TextStyle(fontWeight: FontWeight.bold),):Text(homeController.jsonModelList[homeController.indexJson.value].category!,style: const TextStyle(fontWeight: FontWeight.bold),)),
         actions: [
-          IconButton(onPressed: () {
+          IconButton(onPressed: () async {
             if(isFromAPI) {
-              DBQuotesModel d1 = DBQuotesModel(
-                  quote: homeController.quotesAPIModelList[quotesController.indexAPI.value].content!,
-                  category: homeController.tagOfAPI.value,
-                  author: homeController.quotesAPIModelList[quotesController.indexAPI.value].author);
-              DBHelper.dbHelper.insertQuotes(d1);
-              dbController.readQuotes();
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Saved SuccessFully")));
+              if(await DBHelper.dbHelper.readSQ(homeController.quotesAPIModelList[quotesController.indexAPI.value].content!)==true)
+            {
+            DBQuotesModel db=DBQuotesModel(author: homeController.quotesAPIModelList[quotesController.indexAPI.value].author!,quote: homeController.quotesAPIModelList[quotesController.indexAPI.value].content!,category: homeController.tagOfAPI.value);
+            DBHelper.dbHelper.insertQuotes(db);
+            dbController.readQuotes();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("SucessFully Added")));
+            }
+            else{
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Already Added")));
+            }
+
             }
             else{
               String quote=homeController.jsonModelList[quotesController.fIndexJson.value].quotesList![quotesController.lIndexJson.value].quote!;
               String author=homeController.jsonModelList[quotesController.fIndexJson.value].quotesList![quotesController.lIndexJson.value].author!;
-              DBQuotesModel d1=DBQuotesModel(quote: quote,category: homeController.jsonModelList[quotesController.fIndexJson.value].category!,author:author);
-              DBHelper.dbHelper.insertQuotes(d1);
-              dbController.readQuotes();
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Saved SuccessFully")));
-
+              if(await DBHelper.dbHelper.readSQ(quote)==true)
+              {
+                DBQuotesModel d1=DBQuotesModel(quote: quote,category: homeController.jsonModelList[quotesController.fIndexJson.value].category!,author:author);
+                DBHelper.dbHelper.insertQuotes(d1);
+                dbController.readQuotes();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("SucessFully Added")));
+              }
+              else{
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Already Added")));
+              }
             }
               }, icon: Icon(Icons.favorite,color: Colors.pinkAccent.shade700,)),
           ],),
@@ -95,7 +103,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18,
-                                            color: quotesController.randomWallpaper.value==3||quotesController.randomWallpaper.value==5||quotesController.randomWallpaper.value==8||quotesController.randomWallpaper.value==9||quotesController.randomWallpaper.value==13||quotesController.randomWallpaper.value==14||quotesController.randomWallpaper.value==18||quotesController.randomWallpaper.value==19||quotesController.randomWallpaper.value==20||quotesController.randomWallpaper.value==4?Colors.white:Colors.green,
+                                            color: quotesController.randomWallpaper.value==1||quotesController.randomWallpaper.value==3||quotesController.randomWallpaper.value==5||quotesController.randomWallpaper.value==6||quotesController.randomWallpaper.value==7||quotesController.randomWallpaper.value==8||quotesController.randomWallpaper.value==9||quotesController.randomWallpaper.value==11||quotesController.randomWallpaper.value==12||quotesController.randomWallpaper.value==17?Colors.black:Colors.white,
                                             fontFamily: "s${familyController.fontManager.value}",
                                           ),
                                         )
@@ -108,8 +116,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                               .quote!,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: quotesController.randomWallpaper.value==3||quotesController.randomWallpaper.value==5||quotesController.randomWallpaper.value==8||quotesController.randomWallpaper.value==9||quotesController.randomWallpaper.value==13||quotesController.randomWallpaper.value==14||quotesController.randomWallpaper.value==18||quotesController.randomWallpaper.value==19||quotesController.randomWallpaper.value==20||quotesController.randomWallpaper.value==4?Colors.white:Colors.green,
                                             fontSize: 18,
+                                            color: quotesController.randomWallpaper.value==1||quotesController.randomWallpaper.value==3||quotesController.randomWallpaper.value==5||quotesController.randomWallpaper.value==6||quotesController.randomWallpaper.value==7||quotesController.randomWallpaper.value==8||quotesController.randomWallpaper.value==9||quotesController.randomWallpaper.value==11||quotesController.randomWallpaper.value==12||quotesController.randomWallpaper.value==17?Colors.black:Colors.white,
                                             fontFamily: "s${familyController.fontManager.value}",
                                           ),
                                         ),
@@ -123,8 +131,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                           .author!,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: quotesController.randomWallpaper.value==3||quotesController.randomWallpaper.value==5||quotesController.randomWallpaper.value==8||quotesController.randomWallpaper.value==9||quotesController.randomWallpaper.value==13||quotesController.randomWallpaper.value==14||quotesController.randomWallpaper.value==18||quotesController.randomWallpaper.value==19||quotesController.randomWallpaper.value==20||quotesController.randomWallpaper.value==4?Colors.white:Colors.green,
-                                        fontSize: 22,
+                                        fontSize:18,
+                                        color: quotesController.randomWallpaper.value==1||quotesController.randomWallpaper.value==3||quotesController.randomWallpaper.value==5||quotesController.randomWallpaper.value==6||quotesController.randomWallpaper.value==7||quotesController.randomWallpaper.value==8||quotesController.randomWallpaper.value==9||quotesController.randomWallpaper.value==11||quotesController.randomWallpaper.value==12||quotesController.randomWallpaper.value==17?Colors.black:Colors.white,
                                         fontFamily: "s${familyController.fontManager.value}",
                                       ),
                                     )
@@ -137,8 +145,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                           .author!,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 22,
-                                        color: quotesController.randomWallpaper.value==3||quotesController.randomWallpaper.value==5||quotesController.randomWallpaper.value==8||quotesController.randomWallpaper.value==9||quotesController.randomWallpaper.value==13||quotesController.randomWallpaper.value==14||quotesController.randomWallpaper.value==18||quotesController.randomWallpaper.value==19||quotesController.randomWallpaper.value==20||quotesController.randomWallpaper.value==4?Colors.white:Colors.green,
+                                        fontSize: 18,
+                                        color: quotesController.randomWallpaper.value==1||quotesController.randomWallpaper.value==3||quotesController.randomWallpaper.value==5||quotesController.randomWallpaper.value==6||quotesController.randomWallpaper.value==7||quotesController.randomWallpaper.value==8||quotesController.randomWallpaper.value==9||quotesController.randomWallpaper.value==11||quotesController.randomWallpaper.value==12||quotesController.randomWallpaper.value==17?Colors.black:Colors.white,
                                         fontFamily: "s${familyController.fontManager.value}",
                                       ),
                                     ),
