@@ -32,7 +32,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: Obx(() => isFromAPI?Text(homeController.tagOfAPI.value,style: const TextStyle(fontWeight: FontWeight.bold),):Text(homeController.jsonModelList[homeController.indexJson.value].category!,style: const TextStyle(fontWeight: FontWeight.bold),)),
+        appBar: AppBar(title: Obx(() => isFromAPI?Text(homeController.tagOfAPI.value,style: const TextStyle(fontWeight: FontWeight.bold),):Text(homeController.jsonModelList[quotesController.fIndexJson.value].category!,style: const TextStyle(fontWeight: FontWeight.bold),)),
         actions: [
           IconButton(onPressed: () async {
             if(isFromAPI) {
